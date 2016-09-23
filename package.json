@@ -1,0 +1,16 @@
+{
+  "name": "meansockets",
+  "version": "0.0.0",
+  "description": "websocketfun",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^3.3.7",
+    "express": "^4.14.0",
+    "ws": "^1.1.1"
+  }
+}
