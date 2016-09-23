@@ -100,12 +100,14 @@ function appendChar(msg, newline){
         sel.text = myValue;
     }
     //MOZILLA and others
-    else if (cBox.selectionStart || cBox.selectionStart == '0') {
+    else if (cData.selectionStart || cData.selectionStart == '0') {
+      console.log('Adding at specified position.');
         cBox.value = cBox.value.substring(0, cData.cursorStart)
                       + String.fromCharCode(cData.char);
                       + cBox.value.substring(cData.cursorEnd, cBox.value.length);
     } else {
-        myField.value += myValue;
+        console.log("Just appending the char");
+        cBox.value += String.fromCharCode(cData.char);
     }
     box.rows[0].cells[0].innerHTML += msg;
   }
