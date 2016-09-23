@@ -5,9 +5,8 @@ var server = require('http').createServer()
   , express = require('express')
   , app = express()
   , port = 4080;
-// app.use(function (req, res) {
-//   res.send({ msg: "hello" });
-// });
+
+const util = require('util')
 app.use(express.static('public'));
 app.use(express.static('node_modules/bootstrap/dist'));
 
@@ -30,28 +29,24 @@ wss.on('connection', function connection(ws) {
 
   ws.on('message', function incoming(message) {
     ///Make parsing time for complex messages
-    if(message != 'OK'){
-      console.log('received: %s', message);
+    if(message === 'OK'){
+      return; //update the item in connArr to indicate it's still alive...
     }
-
+    console.log('received: %s', message);
+    console.log(util.inspect(message, {showHidden: true, depth: 2}));
     switch (message) {
-      case 8:
-        console.log('Backspace.onMessage');
-        ws.send(message);
+      case '8':
+        console.log('Got Backspace');
+        ws.send(String.fromCharCode(message));
         break;
-      case 13:
-        console.log('Newline.onMessage');
-        ws.send(message);
-        break;
-      case 'open':
-        break;
-      case 'OK':
+      case '13':
+        console.log('Got newline');
+        ws.send(String.fromCharCode(message));
         break;
       default:
         messageParse(message, ws);
         break;
     }
-    //ws.send(String.fromCharCode(message));
   });
 
   console.log("Sending hello...");
@@ -59,16 +54,14 @@ wss.on('connection', function connection(ws) {
   ws.on('error', function(err){
     console.log(err);
   });
-  const util = require('util')
-  console.log(util.inspect(ws, {showHidden: false, depth: null}))
+
+  //console.log(util.inspect(ws, {showHidden: false, depth: null}));
 });
 
-function messageParse(msg,socket){
-  var complexMsg = JSON.parse(msg);
-  console.log("Complex message character: "+String.fromCharCode(complexMsg.char));
-  console.log("Complex message cursorStart: "+complexMsg.cursorStart);
-  console.log("Complex message cursorEnd: "+complexMsg.cursorEnd);
-  socket.send(JSON.stringify(msg));
+function messageParse(msg, socket){
+  //do things and stuff.
+  //Store it in memcache or some how "source control" it.
+  socket.send(msg);
 }
 
 function sendPing(){

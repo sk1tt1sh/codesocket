@@ -12,8 +12,6 @@ connection.onerror = function (error) {
 connection.onmessage = function (e) {
   console.log('Server: ' + e.data);
   processMsg(e.data, connection);
-  //var resp = prompt(e.data + '. Your response?','');
-  //if(resp != null){connection.send(resp);}
 };
 
 function processMsg(msg, sock){
@@ -22,12 +20,12 @@ function processMsg(msg, sock){
       sock.send('OK');
       break;
     case '\b':
-    //-->Need complex type data to remove char at position in the text box
+      //-->Need complex type data to remove char at position in the text box
       console.log('Backspace.');
       removeChar();
       break;
     default:
-    //-->Use complex type to set text at position in text box.
+      //-->Use complex type to set text at position in text box.
       appendChar(msg, msg == '\r');
       break;
   }
@@ -89,6 +87,23 @@ function appendChar(msg, newline){
     // Add some text to the new cells:
   } else {
     console.log("Adding char to line.");
+    var cData = JSON.parse(msg);
+
+    //http://stackoverflow.com/questions/11076975/insert-text-into-textarea-at-cursor-position-javascript
+    // IE
+    if (document.selection) {
+        cBox.focus();
+        var sel = document.selection.createRange();
+        sel.text = myValue;
+    }
+    //MOZILLA and others
+    else if (cBox.selectionStart || cBox.selectionStart == '0') {
+        cBox.value = cBox.value.substring(0, cData.cursorStart)
+                      + String.fromCharCode(cData.char);
+                      + cBox.value.substring(cData.cursorEnd, cBox.value.length);
+    } else {
+        myField.value += myValue;
+    }
     box.rows[0].cells[0].innerHTML += msg;
   }
 }
