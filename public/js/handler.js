@@ -24,6 +24,9 @@ function processMsg(msg, sock){
       console.log('Backspace.');
       removeChar();
       break;
+    case 'OPEN':
+      console.log("Socket open.");
+      return;
     default:
       //-->Use complex type to set text at position in text box.
       appendChar(msg, msg == '\r');
